@@ -41,7 +41,8 @@
                                     <option value="3">4</option>
                                 </select>
                                 <!-- <button type="submit" class="btn btn-primary my-1">Comenzar</button> -->
-                                <div class="btn btn-primary my-1" id="btnComenzar">Comenzar</div>
+                                <div class="btn btn-primary m-1" id="btnGenerar">Generar</div>
+                                <div class="btn btn-success m-1" id="btnResolver">Resolver</div>
                             </form>
                         </div>
                     </div>
@@ -58,11 +59,22 @@
         <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/app.js" type="text/javascript"></script>
         <script>
+            var origen = [];
+            var destino = [];
+            var auxiliar = [];
+
             $(document).ready(function(){
 
-                $('#btnComenzar').click(function(){
+                $('#btnGenerar').click(function(){
                     init();
                 });
+
+                $('#btnResolver').click(function(){
+                    destino = [];
+                    var nivel = parseInt($('#selectNiveles').val());
+                    hanoi(nivel+1, origen, destino, auxiliar);
+                });
+
 
             }); 
 
@@ -79,16 +91,42 @@
 
                 for (var i = nivel; i >= 0; i--) {
                     drawDisk(0, nivel - i, i + 1);
-                }
-                for (var i = nivel; i >= 0; i--) {
-                    drawDisk(1, nivel - i, i + 1);
-                }
-                for (var i = nivel; i >= 0; i--) {
-                    drawDisk(2, nivel - i, i + 1);
+                    origen.push(i + 1);
                 }
             }
 
-            
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+
+
+
+            function hanoi(disco, orig, dest, aux){
+                if (disco > 0){
+                    hanoi(disco-1, orig, aux, dest);
+                    console.log("Mover " + disco + " de " + orig + " a " + dest);
+                    orig.pop();
+                    dest.push(disco);
+
+                    drawDisks(origen, destino, auxiliar);
+                    hanoi(disco-1, aux, dest, orig);
+                }
+            }
+
+            function drawDisks(){
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBackground();
+                for (var i = origen.length; i >= 0; i--) {
+                    drawDisk(0, origen.length - i, i );
+                }
+                for (var i = destino.length; i >= 0; i--) {
+                    drawDisk(1, destino.length - i, i);
+                }
+                for (var i = auxiliar.length; i >= 0; i--) {
+                    drawDisk(2, auxiliar.length - i, i);
+                }
+            }
 
             function drawBackground(){
                 ctx.fillStyle = 'lightgray';
