@@ -94,9 +94,13 @@
                     origen.push(i + 1);
                 }
             }
-
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
+            
+            function sleep(milliseconds) {
+                const date = Date.now();
+                let currentDate = null;
+                do {
+                    currentDate = Date.now();
+                } while (currentDate - date < milliseconds);
             }
 
 
@@ -109,22 +113,24 @@
                     orig.pop();
                     dest.push(disco);
 
-                    drawDisks(origen, destino, auxiliar);
+                    drawDisks(orig, dest, aux);
+                    sleep(500);
                     hanoi(disco-1, aux, dest, orig);
                 }
             }
 
-            function drawDisks(){
+            function drawDisks(orig, dest, aux){
+                console.log(orig.length + "," + dest.length + "," + aux.length);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawBackground();
-                for (var i = origen.length; i >= 0; i--) {
-                    drawDisk(0, origen.length - i, i );
+                for (var i = orig.length; i >= 0; i--) {
+                    drawDisk(0, orig.length - i, i );
                 }
-                for (var i = destino.length; i >= 0; i--) {
-                    drawDisk(1, destino.length - i, i);
+                for (var i = aux.length; i >= 0; i--) {
+                    drawDisk(1, aux.length - i, i);
                 }
-                for (var i = auxiliar.length; i >= 0; i--) {
-                    drawDisk(2, auxiliar.length - i, i);
+                for (var i = dest.length; i >= 0; i--) {
+                    drawDisk(2, dest.length - i, i);
                 }
             }
 
