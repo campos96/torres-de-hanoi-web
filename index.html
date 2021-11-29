@@ -1,157 +1,81 @@
 <!doctype html>
-    <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="css/app.css">
-        <title>Torres de Hanoi</title>
-    </head>
-    <body class="bg-light">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Torres de Hanoi</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Proyecto en Github</a>
-                    </li>
-                </ul>
-                <form class="form-inline my-2 my-lg-0">
-                    
-                </form>
-            </div>
-        </nav>
-        <div class="container mt-5">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <form class="form-inline">
-                                <label class="my-1 mr-2" for="selectNiveles">Niveles</label>
-                                <select class="custom-select my-1 mr-sm-2" id="selectNiveles">
-                                    <option selected>Choose...</option>
-                                    <option value="2">3</option>
-                                    <option value="3">4</option>
-                                </select>
-                                <!-- <button type="submit" class="btn btn-primary my-1">Comenzar</button> -->
-                                <div class="btn btn-primary m-1" id="btnGenerar">Generar</div>
-                                <div class="btn btn-success m-1" id="btnResolver">Resolver</div>
-                            </form>
-                        </div>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/app.css">
+    <title>Torres de Hanoi</title>
+</head>
+<body class="bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Torres de Hanoi</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="https://github.com/campos96/torres-de-hanoi-web" target="blank">Proyecto en Github</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+            </form>
+        </div>
+    </nav>
+    <div class="container text-white text-center p-4">
+        <h3>Torres de Hanoi</h3>
+    </div>
+    <div class="container p-5 d-block d-md-none text-white text-center">
+        <h3>Opps! Este programa no es compatible con dispositivos mobiles como smartphones.</h3>
+        <br>
+        <h34>Intenta con un dispositivo con mayor resolucion</h4>
+    </div>
+    <div class="container d-none d-md-block">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <form class="form-inline">
+                            <label class="my-1 mr-2" for="selectNiveles">Nivel de dificultad</label>
+                            <select class="custom-select my-1 mr-sm-2" id="selectNiveles">
+                                <option selected>Choose...</option>
+                                <option value="1">2</option>
+                                <option value="2">3</option>
+                                <option value="3">4</option>
+                                <option value="4">5</option>
+                                <option value="5">6</option>
+                                <option value="6">7</option>
+                            </select>
+                            <button class="btn btn-primary m-1" id="btnGenerar">Generar discos</button>
+                        </form>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <canvas id="myCanvas" width="600" height="600" style="border:1px solid #d3d3d3;">
-                        </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-success m-1 float-right" id="btnResolver">Resolver</button>
                     </div>
                 </div>
-                
             </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12 col-xl-8 text-center">
+                        <canvas id="myCanvas" width="650" height="400"></canvas>
+                    </div>
+                    <div class="col-12 col-xl-4 bg-dark text-white pt-3" id="log" style="height: 400px; overflow-y: scroll;">                        
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <script src="js/jquery-3.6.0.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/app.js" type="text/javascript"></script>
-        <script>
-            var origen = [];
-            var destino = [];
-            var auxiliar = [];
-
-            $(document).ready(function(){
-
-                $('#btnGenerar').click(function(){
-                    init();
-                });
-
-                $('#btnResolver').click(function(){
-                    destino = [];
-                    var nivel = parseInt($('#selectNiveles').val());
-                    hanoi(nivel+1, origen, destino, auxiliar);
-                });
-
-
-            }); 
-
-
-            var canvas = document.getElementById("myCanvas");
-            var ctx = canvas.getContext("2d");
-            var diskColors = ['orange', 'yellow', 'green', 'blue', 'purple', 'red'];
-
-
-            function init(){
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawBackground();
-                var nivel = parseInt($('#selectNiveles').val());
-
-                for (var i = nivel; i >= 0; i--) {
-                    drawDisk(0, nivel - i, i + 1);
-                    origen.push(i + 1);
-                }
-            }
-            
-            function sleep(milliseconds) {
-                const date = Date.now();
-                let currentDate = null;
-                do {
-                    currentDate = Date.now();
-                } while (currentDate - date < milliseconds);
-            }
-
-
-
-
-            function hanoi(disco, orig, dest, aux){
-                if (disco > 0){
-                    hanoi(disco-1, orig, aux, dest);
-                    console.log("Mover " + disco + " de " + orig + " a " + dest);
-                    orig.pop();
-                    dest.push(disco);
-
-                    drawDisks(orig, dest, aux);
-                    sleep(500);
-                    hanoi(disco-1, aux, dest, orig);
-                }
-            }
-
-            function drawDisks(orig, dest, aux){
-                console.log(orig.length + "," + dest.length + "," + aux.length);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawBackground();
-                for (var i = orig.length; i >= 0; i--) {
-                    drawDisk(0, orig.length - i, i );
-                }
-                for (var i = aux.length; i >= 0; i--) {
-                    drawDisk(1, aux.length - i, i);
-                }
-                for (var i = dest.length; i >= 0; i--) {
-                    drawDisk(2, dest.length - i, i);
-                }
-            }
-
-            function drawBackground(){
-                ctx.fillStyle = 'lightgray';
-                ctx.fillRect(20,290,160,10);
-                ctx.fillRect(95,20,10,280);
-
-                ctx.fillRect(220,290,160,10);
-                ctx.fillRect(295,20,10,280);
-
-                ctx.fillRect(420,290,160,10);
-                ctx.fillRect(495,20,10,280);
-            }
-
-            function drawDisk(position, level, disk){
-                ctx.fillStyle = diskColors[disk];
-                ctx.fillRect((position * 200) + 100 - (disk * 30 / 2), 270 - (level * 20), disk * 30,20);
-            }
-
-        </script>
-
+    </div>
+    <div class="container text-white text-center p-3">
+        <h5>Developed by Cesar Campos @ 2021</h5>
+        <h5><a href="https://github.com/campos96" class="btn btn-link" target="blank">My Github</a></h5>
+    </div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+    <script>
+        
+    </script>
 </body>
 </html>
